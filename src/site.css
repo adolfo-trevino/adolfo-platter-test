@@ -38,7 +38,7 @@
     --color-primary-black: #231F20;
     --color-secondary-black: #5C553A;
     --color-typography-black: #1C1D1D;
-    --color-typography-gray: #727272;
+    --color-typography-gray: #707070;
     --color-light-gray: #CFCFCF;
     --color-neutral-gray: #DDD6D7;
     --color-tag-green: #5C7962;
@@ -50,12 +50,21 @@
 @utility w-355px {
     width: 355px;
 }
+@utility text-8px {
+    font-size: 8px;
+}
+@utility text-10px {
+    font-size: 10px;
+}
+@utility text-11px {
+    font-size: 11px;
+}
 @layer utilities {
     .wrapper {
         max-width: 1440px;
         margin: 0 auto;
-        padding-left: 1.5px;
-        padding-right: 1.5px;
+        padding-left: 24px;
+        padding-right: 24px;
 
         @media (min-width: 1920px) {
             max-width: 1540px;
@@ -64,6 +73,10 @@
         @media (min-width: 1024px) {            
               padding-left: 64px;
               padding-right: 64px;           
+        }
+        @media (min-width: 1280px) {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
     }
 

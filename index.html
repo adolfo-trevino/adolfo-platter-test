@@ -18,11 +18,15 @@
             <h2 id="">Best sellers</h2>
             <a href="#">Shop All Best Sellers</a>
           </header>
-          <ul>
+          <ul class="grid grid-cols-2 lg:flex ">
             <li class="lg:w-355px">
               <article class="group">
-                <a href="#">
-                  <figure class="relative">
+                <a href="#" class="flex flex-col gap-3.5 lg:gap-4.5">
+                  <figure class="relative ">
+                    <ul class="absolute top-0 left-0 flex justify-between w-full p-1 lg:p-2 z-10" aria-label="Badges">
+                      <li class="flex items-center justify-center py-1.5 px-2 rounded-full border border-black font-bebas-neue text-8px lg:text-10px leading-none bg-white"><span class="">Best seller</span></li>
+                      <li class="flex items-center justify-center py-1.5 px-2 rounded-full border border-black font-bebas-neue text-8px lg:text-10px leading-none bg-tag-green text-white"><span class="">Save 15%</span></li>
+                    </ul>
                   <img
                     class="block w-full group-hover:opacity-0 transition-opacity duration-300 rounded-xl"
                     src="/images/aleksandrs-karevs-4fz3fM8Pbnw-unsplash.jpg"
@@ -46,18 +50,25 @@
                     decoding="async"
                   >
                   </figure>
-                  <div>
-                    <h3 class="font-bebas-neue text-base lg:text-lg">BB Mask – Deep Repair Treatment</h3>
-                    <div>
+                  <div class="space-y-3">
+                    <h3 class="font-bebas-neue text-base lg:text-lg lg:leading-none">BB Mask – Deep Repair Treatment</h3>
+                    <div class="flex items-center gap-1 lg:gap-2">
                       
-                        <span class="" aria-hidden="true">★★★★★</span>                     
-                        <span class="sr-only">Rated 4.6 out of 5 based on 1,234 reviews.</span>
+                        <span class="flex gap-1" aria-hidden="true">
+                          <img src="/images/star.svg" alt="Star">
+                          <img src="/images/star.svg" alt="Star">
+                          <img src="/images/star.svg" alt="Star">
+                          <img src="/images/star.svg" alt="Star">
+                          <img src="/images/star-empty.svg" alt="Star">
+                        </span>         
+                        <span class="text-typography-gray text-11px lg:text-sm font-poppins font-normal leading-none" aria-hidden="true">1,234 Reviews</span>            
+                        <span class="sr-only">Rated 4.5 out of 5 based on 1,234 reviews.</span>
+                        
                     </div>
-                    <p class="font-poppins text-base font-medium">
+                    <p class="font-poppins text-base font-medium leading-none">
                       <data value="104.95">$104.95</data>
                     </p>
-                  </div>
-                
+                  </div>                
                 </a>
               </article>
             </li>
