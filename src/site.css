@@ -1,1 +1,70 @@
 @import "tailwindcss";
+@layer base {
+    @font-face {
+        font-family: "Bebas Neue";
+        src: url("/fonts/BebasNeue-Regular.woff2") format("woff2"),
+             url("/fonts/BebasNeue-Regular.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    @font-face {
+        font-family: "Poppins";
+        src: url("/fonts/Poppins-Regular.woff2") format("woff2"),
+             url("/fonts/Poppins-Regular.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: "Poppins";
+        src: url("/fonts/Poppins-Medium.woff2") format("woff2"),
+             url("/fonts/Poppins-Medium.woff") format("woff");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: "Source Serif";
+        src: url("/fonts/SourceSerif-Black.woff2") format("woff2"),
+             url("/fonts/SourceSerif-Black.woff") format("woff");
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+    }
+}
+@theme {
+    --color-primary-black: #231F20;
+    --color-secondary-black: #5C553A;
+    --color-typography-black: #1C1D1D;
+    --color-typography-gray: #727272;
+    --color-light-gray: #CFCFCF;
+    --color-neutral-gray: #DDD6D7;
+    --color-tag-green: #5C7962;
+
+    --font-bebas-neue: "Bebas Neue", sans-serif;
+    --font-poppins: "Poppins", sans-serif;
+    --font-source-serif: "Source Serif", serif;
+}
+@utility w-355px {
+    width: 355px;
+}
+@layer utilities {
+    .wrapper {
+        max-width: 1440px;
+        margin: 0 auto;
+        padding-left: 1.5px;
+        padding-right: 1.5px;
+
+        @media (min-width: 1920px) {
+            max-width: 1540px;
+        }
+
+        @media (min-width: 1024px) {            
+              padding-left: 64px;
+              padding-right: 64px;           
+        }
+    }
+
+}
