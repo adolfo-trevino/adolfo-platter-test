@@ -50,6 +50,11 @@
 @utility w-355px {
     width: 355px;
 }
+@utility gap-x-11px {
+    column-gap: 11px
+}
+
+/* Text sizes */
 @utility text-8px {
     font-size: 8px;
 }
@@ -59,22 +64,33 @@
 @utility text-11px {
     font-size: 11px;
 }
+@utility text-28px {
+    font-size: 28px;
+}
+@utility text-40px {
+    font-size: 40px;
+}
+
+@utility star-size {
+    width: 9px;
+    height: 9px;
+    @media (min-width: 1024px) {
+        width: 12px;
+        height: 12px;
+    }
+}
 @layer utilities {
     .wrapper {
         max-width: 1440px;
         margin: 0 auto;
         padding-left: 24px;
         padding-right: 24px;
-
-        @media (min-width: 1920px) {
-            max-width: 1540px;
-        }
-
         @media (min-width: 1024px) {            
               padding-left: 64px;
               padding-right: 64px;           
         }
-        @media (min-width: 1280px) {
+        @media (min-width: 1920px) {
+            max-width: 1540px;
             padding-left: 1.5rem;
             padding-right: 1.5rem;
         }
