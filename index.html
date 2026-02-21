@@ -14,12 +14,20 @@
     <main>
     
     <section class="bg-white py-9 lg:py-11 lg:mt-10 " aria-labelledby="best-sellers">
+      <div class="wrapper ">
+        <header class="flex justify-center lg:justify-between items-center mb-8 lg:gap-12">
+          <h2 class="font-source-serif text-28px lg:text-40px">Best Sellers</h2>
+          <a href="#" class="hidden group lg:flex items-center gap-2 text-secondary-black font-poppins font-medium text-sm leading-none">
+            <span>Shop All Best Sellers </span>
+            <svg class="group-hover:animate-bounce-right" width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 6H14.3333M14.3333 6L9.33333 1M14.3333 6L9.33333 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>            
+          </a>
+        </header>
+      </div>
         <best-sellers>
           <div class="wrapper wrapper--pr-0-lg ">
-          <header class="flex justify-center lg:justify-between items-center mb-8 lg:gap-12">
-            <h2 class="font-source-serif text-28px lg:text-40px">Best Sellers</h2>
-            <a href="#" class="hidden lg:block">Shop All Best Sellers</a>
-          </header>
+       
           <!-- Product Grid -->
           <div id="product-grid-container" >
             <ul id="product-grid" class="grid grid-cols-2 gap-x-11px gap-y-6 mb-6 lg:flex ">

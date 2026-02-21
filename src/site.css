@@ -47,6 +47,18 @@
     --font-poppins: "Poppins", sans-serif;
     --font-source-serif: "Source Serif", serif;
 }
+@keyframes bounceRight {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(6px);
+    }
+}
+@utility animate-bounce-right {
+    animation: bounceRight 0.5s ease-in-out;
+}
 @utility w-355px {
     width: 355px;
 }
@@ -127,6 +139,17 @@
     #product-grid-container {
         overflow: hidden;
     }
+
+@media (min-width: 1440px) {
+    #product-grid-container {
+        width: calc(100% + (100vw - 1440px) / 2);
+    }
+}
+@media (min-width: 1920px) {
+    #product-grid-container {
+        width: calc(100% + (100vw - 1540px) / 2);
+    }
+}
 
 #product-grid {
     transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
