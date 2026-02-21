@@ -2,14 +2,17 @@ class BestSellers extends HTMLElement {
   constructor() {
     super();
     this.defineSelectors();
-    this.isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+
+    this.mql = window.matchMedia('(min-width: 1024px)');
+    this.isDesktop = this.mql.matches;
+
     // Custom Scrollbar state
     this.tx = 0;
     this.dragging = false;
     this.dragStartMouseX = 0;
     this.dragStartThumbX = 0;
 
-    // Bound handlers stored so we can removeEventListener 
+    // Bound handlers stored so we can removeEventListener
     this.onMouseMove = this.handleDragMove.bind(this);
     this.onMouseUp = this.handleDragEnd.bind(this);
     this.onTouchMove = e => this.handleDragMove(e.touches[0]);
@@ -17,8 +20,9 @@ class BestSellers extends HTMLElement {
     this.onShowMore = this.handleShowMore.bind(this);
     this.onDragStart = this.handleDragStart.bind(this);
     this.onClickTrack = this.handleClickTrack.bind(this);
-    }
-  
+    this.onBreakpointChange = this.handleBreakpointChange.bind(this);
+  }
+
   connectedCallback() {
     this.addEventListeners();
     requestAnimationFrame(() => this.syncUI());
@@ -46,63 +50,95 @@ class BestSellers extends HTMLElement {
     this.thumbTravel = Math.max(0, this.trackW - this.thumbW);
     return { viewW: this.viewW, totalW: this.totalW, trackW: this.trackW, maxTx: this.maxTx, thumbW: this.thumbW, thumbTravel: this.thumbTravel };
   }
-  
+
   addEventListeners() {
     if (this.showMoreButton) {
       this.showMoreButton.addEventListener('click', this.onShowMore);
     }
-    // Custom Scrollbar
+    this.mql.addEventListener('change', this.onBreakpointChange);
     if (this.isDesktop) {
-      this.thumb?.addEventListener('mousedown', this.onDragStart);
-      window.addEventListener('mousemove', this.onMouseMove);
-      window.addEventListener('mouseup', this.onMouseUp);
+      this.addDesktopListeners();
+    }
+  }
 
-      this.thumb?.addEventListener('touchstart', this.onDragStart);
-      window.addEventListener('touchmove', this.onTouchMove);
-      window.addEventListener('touchend', this.onTouchEnd);
+  addDesktopListeners() {
+    this.thumb?.addEventListener('mousedown', this.onDragStart);
+    this.thumb?.addEventListener('touchstart', this.onDragStart);
+    this.track?.addEventListener('click', this.onClickTrack);
+    window.addEventListener('mousemove', this.onMouseMove);
+    window.addEventListener('mouseup', this.onMouseUp);
+    window.addEventListener('touchmove', this.onTouchMove);
+    window.addEventListener('touchend', this.onTouchEnd);
+    if (this.productGridContainer) {
+      this.resizeObserver = new ResizeObserver(() => this.syncUI());
+      this.resizeObserver.observe(this.productGridContainer);
+    }
+  }
 
-      this.track?.addEventListener('click', this.onClickTrack);
+  removeDesktopListeners() {
+    this.thumb?.removeEventListener('mousedown', this.onDragStart);
+    this.thumb?.removeEventListener('touchstart', this.onDragStart);
+    this.track?.removeEventListener('click', this.onClickTrack);
+    window.removeEventListener('mousemove', this.onMouseMove);
+    window.removeEventListener('mouseup', this.onMouseUp);
+    window.removeEventListener('touchmove', this.onTouchMove);
+    window.removeEventListener('touchend', this.onTouchEnd);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
 
-      if (this.productGridContainer) {
-        this.resizeObserver = new ResizeObserver(() => this.syncUI());
-        this.resizeObserver.observe(this.productGridContainer);
+  /*
+  Breakpoint Change
+  */
+  handleBreakpointChange(e) {
+    const wasDesktop = this.isDesktop;
+    this.isDesktop = e.matches;
+
+    if (!wasDesktop && this.isDesktop) {
+      this.addDesktopListeners();
+      this.syncUI();
+    } else if (wasDesktop && !this.isDesktop) {
+      this.removeDesktopListeners();
+      this.tx = 0;
+      if (this.productGrid) {
+        this.productGrid.style.transform = '';
+        this.productGrid.classList.remove('no-transition');
+        // Force a synchronous layout flush to bust Chrome's stale compositing cache
+        void this.productGrid.offsetWidth;
       }
     }
   }
-  
+
   /*
   Show More
   */
   handleShowMore() {
-    if(!this.moreProducts || !this.showMoreButton) return;
+    if (!this.moreProducts || !this.showMoreButton) return;
     this.moreProducts.classList.add('expanded');
     this.showMoreButton.setAttribute('aria-expanded', 'true');
     this.showMoreButton.classList.add('hidden');
   }
 
-  /*  
+  /*
   Custom Scrollbar
   */
   syncUI() {
-    if(!this.isDesktop) return;
+    if (!this.isDesktop) return;
     const { maxTx, thumbW, thumbTravel } = this.geometry();
-    // Clamp _tx just in case
+    // Clamp tx in case content width changed
     this.tx = Math.min(0, Math.max(-maxTx, this.tx));
 
     // Progress 0→1 (how far we've scrolled)
     const progress = maxTx > 0 ? Math.abs(this.tx) / maxTx : 0;
 
-    // Apply to product grid
     if (this.productGrid) {
       this.productGrid.style.transform = `translateX(${this.tx}px)`;
     }
 
-    // SIZE & POSITION OF THUMB
     if (this.thumb) {
       this.thumb.style.width = `${thumbW}px`;
       this.thumb.style.transform = `translateX(${progress * thumbTravel}px)`;
     }
-
   }
 
   // Scrollbar Handlers
@@ -117,8 +153,9 @@ class BestSellers extends HTMLElement {
     this.productGrid.classList.add('no-transition');
     this.thumb.style.transition = 'none';
   }
+
   handleDragMove(e) {
-    if(!this.dragging) return;
+    if (!this.dragging) return;
     const { thumbTravel, maxTx } = this.geometry();
 
     const delta = e.clientX - this.dragStartMouseX;
@@ -128,12 +165,14 @@ class BestSellers extends HTMLElement {
     this.tx = -(progress * maxTx);
     this.syncUI();
   }
+
   handleDragEnd() {
     if (!this.dragging) return;
     this.dragging = false;
     this.productGrid?.classList.remove('no-transition');
     this.thumb?.style.removeProperty('transition');
   }
+
   handleClickTrack(e) {
     if (this.dragging || !this.isDesktop || e.target === this.thumb || !this.track) return;
     const { thumbW, thumbTravel, maxTx } = this.geometry();
@@ -149,22 +188,15 @@ class BestSellers extends HTMLElement {
     if (this.showMoreButton) {
       this.showMoreButton.removeEventListener('click', this.onShowMore);
     }
+    this.mql.removeEventListener('change', this.onBreakpointChange);
     if (this.isDesktop) {
-      this.thumb?.removeEventListener('mousedown', this.onDragStart);
-      this.thumb?.removeEventListener('touchstart', this.onDragStart);
-      this.track?.removeEventListener('click', this.onClickTrack);
-      window.removeEventListener('mousemove', this.onMouseMove);
-      window.removeEventListener('mouseup', this.onMouseUp);
-      window.removeEventListener('touchmove', this.onTouchMove);
-      window.removeEventListener('touchend', this.onTouchEnd);
-      this.resizeObserver?.disconnect();
+      this.removeDesktopListeners();
     }
   }
-  
+
   disconnectedCallback() {
     this.removeEventListeners();
   }
-
 }
 
 customElements.define('best-sellers', BestSellers);
